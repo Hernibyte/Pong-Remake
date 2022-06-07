@@ -4,9 +4,10 @@ using UnityEngine;
 using System;
 
 [Serializable]
-public class PlayerMovement
+public class BallMovement
 {
-    public float velocity;
+    public Vector2 velocity;
+
     private Rigidbody2D rigidbody;
 
     public void Awake(Rigidbody2D rigidbody)
@@ -14,8 +15,8 @@ public class PlayerMovement
         this.rigidbody = rigidbody;
     }
 
-    public void Move(float scalar)
+    public void Move()
     {
-        rigidbody.velocity = new Vector2(0, velocity * scalar);
+        rigidbody.velocity = velocity;
     }
 }
