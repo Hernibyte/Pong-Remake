@@ -12,15 +12,24 @@ public class Player : MonoBehaviour
     [SerializeField]
     PlayerInput input = new PlayerInput();
 
+    Vector2 originalPostion;
+
     private void Awake()
     {
         rig2D = GetComponent<Rigidbody2D>();
 
         movement.Awake(rig2D);
+
+        originalPostion = transform.position;
     }
 
     private void FixedUpdate()
     {
         movement.Move(input.ProcessInput().movement);
+    }
+
+    public void Reset()
+    {
+        transform.position = originalPostion;
     }
 }
