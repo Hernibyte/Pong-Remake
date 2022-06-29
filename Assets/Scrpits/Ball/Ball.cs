@@ -44,6 +44,7 @@ public class Ball : MonoBehaviour
     private void OnCollisionEnter2D(Collision2D collision)
     {
         ContactPoint2D contact = collision.GetContact(0);
+
         if (contact.normal.x == 0 && contact.normal.y > 0)
             movement.velocity.y = movement.velocity.y * (-contact.normal.y);
         else if (contact.normal.x == 0 && contact.normal.y < 0)
@@ -55,7 +56,8 @@ public class Ball : MonoBehaviour
         else
             movement.velocity = movement.velocity * (-contact.normal);
 
-        movement.velocity *= Random.Range(0.9f, 1.2f);
+        movement.velocity.x *= Random.Range(0.9f, 1.2f);
+        movement.velocity.y *= Random.Range(0.9f, 1.2f);
     }
 
     private void OnTriggerEnter2D(Collider2D collision)

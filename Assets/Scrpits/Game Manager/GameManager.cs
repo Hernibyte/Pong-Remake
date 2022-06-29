@@ -11,6 +11,12 @@ namespace CustomEvents
     public class GM_e : UnityEvent<GameManager> { }
 }
 
+public enum GameMode
+{
+    SinglePlayer,
+    MultiPlayer
+}
+
 public class GameManager : MonoBehaviour
 {
     public CustomEvents.GM_e gameEnded_e = new CustomEvents.GM_e();
@@ -23,11 +29,15 @@ public class GameManager : MonoBehaviour
     public int leftPlayerPoints { get; private set; }
     public int rightPlayerPoints { get; private set; }
 
+    public GameMode gameMode;
+
     private Ball ball;
     [SerializeField]
     private Player leftPlayer;
     [SerializeField]
     private Player rightPlayer;
+    [SerializeField]
+    private PlayerBot rightPlayerBot;
 
     float timerStartGame = 0;
     [HideInInspector]
@@ -45,11 +55,25 @@ public class GameManager : MonoBehaviour
     private void Awake()
     {
         ball = FindObjectOfType<Ball>();
+
+        rightPlayerBot.ballTransform = ball.transform;
+
+        gameMode = GameConfig.Get.gameMode;
     }
 
     private void Start()
     {
         ball.triggerWithGoal.AddListener(Pointed);
+
+        switch (gameMode)
+        {
+            case GameMode.SinglePlayer:
+                rightPlayer.gameObject.SetActive(false);
+                break;
+            case GameMode.MultiPlayer:
+                rightPlayerBot.gameObject.SetActive(false);
+                break;
+        }
     }
 
     private void Update()
@@ -82,6 +106,8 @@ public class GameManager : MonoBehaviour
         }
         ball.Reset();
         leftPlayer.Reset();
+        rightPlayerBot.Reset();
+        rightPlayer.Reset();
         gameStarted = false;
     }
 
