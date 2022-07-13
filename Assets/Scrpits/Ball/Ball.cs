@@ -36,35 +36,36 @@ public class Ball : MonoBehaviour
         movement.Awake(rig2D);
     }
 
-    private void FixedUpdate()
+    private void Update()
     {
-        movement.Move();
+        movement.Clamp();
     }
 
-    private void OnCollisionEnter2D(Collision2D collision)
-    {
-        ContactPoint2D contact = collision.GetContact(0);
-
-        if (contact.normal.x == 0 && contact.normal.y > 0)
-            movement.velocity.y = movement.velocity.y * (-contact.normal.y);
-        else if (contact.normal.x == 0 && contact.normal.y < 0)
-            movement.velocity.y = movement.velocity.y * contact.normal.y;
-        else if (contact.normal.y == 0 && contact.normal.x > 0)
-            movement.velocity.x = movement.velocity.x * (-contact.normal.x);
-        else if (contact.normal.y == 0 && contact.normal.x < 0)
-            movement.velocity.x = movement.velocity.x * contact.normal.x;
-        else
-            movement.velocity = movement.velocity * (-contact.normal);
-
-        movement.velocity.x *= Random.Range(0.9f, 1.2f);
-        movement.velocity.y *= Random.Range(0.9f, 1.2f);
-    }
+    //private void OnCollisionEnter2D(Collision2D collision)
+    //{
+    //    ContactPoint2D contact = collision.GetContact(0);
+    //
+    //    if (contact.normal.x == 0 && contact.normal.y > 0)
+    //        movement.velocity.y = movement.velocity.y * (-contact.normal.y);
+    //    else if (contact.normal.x == 0 && contact.normal.y < 0)
+    //        movement.velocity.y = movement.velocity.y * contact.normal.y;
+    //    else if (contact.normal.y == 0 && contact.normal.x > 0)
+    //        movement.velocity.x = movement.velocity.x * (-contact.normal.x);
+    //    else if (contact.normal.y == 0 && contact.normal.x < 0)
+    //        movement.velocity.x = movement.velocity.x * contact.normal.x;
+    //    else
+    //        movement.velocity = movement.velocity * (-contact.normal);
+    //
+    //    movement.velocity.x *= Random.Range(0.9f, 1.2f);
+    //    movement.velocity.y *= Random.Range(0.9f, 1.2f);
+    //}
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
         MyGoals.IGoal goal;
         if (collision.gameObject.TryGetComponent<MyGoals.IGoal>(out goal))
         {
+            movement.Stop();
             triggerWithGoal.Invoke(goal.GetGoal());
         }
     }
@@ -86,5 +87,7 @@ public class Ball : MonoBehaviour
                 movement.velocity = new Vector3(Random.Range(3f, 6f), Random.Range(-6f, 6f));
                 break;
         }
+
+        movement.Move();
     }
 }
